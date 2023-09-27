@@ -316,4 +316,4 @@ for i in range(1000):
     agent.write_summary(i, score, actor_loss_value, critic_loss_value)
 
     if i % 50 == 0 and i != 0:
-        agent.save(f"kicha_{i}")
+        agent.save(f"checkpoint_{i}")
