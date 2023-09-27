@@ -1,0 +1,3 @@
+Wed Sep 27 14:45:45 2023
+WARNING: mju_openResource: unknown file '/Users/prabhathr/Desktop/Project_295A/RoboCup_cleanup/mujoco/field.xml'
+
