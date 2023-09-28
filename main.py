@@ -49,7 +49,7 @@ def Is_goal():
 			return 1000
 	return 0
 
-def Is_goal_sphero():
+def Is_goal_self():
 	for i in range(len(data.contact.geom1)):
 		if (data.geom(data.contact.geom1[i]).name == "sphero1" and data.geom(data.contact.geom2[i]).name in Goal) or (data.geom(data.contact.geom2[i]).name == "sphero1" and data.geom(data.contact.geom1[i]).name in Goal):
 			#print("Sphero Goal!!!")
@@ -99,7 +99,7 @@ def compute_reward():
     # Compute the distance to the ball and goal coefficients
     distance_to_goal_coeff = - 0.01
     distance_to_ball_coeff = - 0.01
-    Sphero_goal_penalty=Is_goal_sphero()
+    self_goal_penalty= Is_goal_self()
     
     # Compute the overall reward
     reward = (
@@ -107,11 +107,10 @@ def compute_reward():
             goal_achieved_reward +
             distance_to_ball_coeff * distance_to_ball +
             distance_to_goal_coeff * distance_to_goal +
-            #time_penalty +
-	        Sphero_goal_penalty+
-            #rotation_penalty +
+            time_penalty +
+	        self_goal_penalty+
             out_of_bound_penalty)
-    return reward, True if goal_achieved_reward!=0.0 else False, True if out_of_bound_penalty!=0 or Sphero_goal_penalty!=0 else False
+    return reward, True if goal_achieved_reward!=0.0 else False, True if out_of_bound_penalty!=0 or self_goal_penalty!=0 else False
 
 # Configurations
 xml_path = 'field.xml' #xml file (assumes this is in the same folder as this file)
@@ -251,7 +250,7 @@ def render_it():
 			forward=state[4]
 			mj.mj_step(model, data)
 
-			# angle, speed = env.action_space.sample() # Take a random action everytime, doesn't work
+			# angle, speed = env.action_space.sample() # Take a random action everytime(test)
 
 			# agent_pos = data.xpos[9]
 			# ball_pos = data.xpos[8]	
@@ -259,12 +258,15 @@ def render_it():
 
 			action = agent.act(state)[0]
 			# angle = np.arctan2(direction_vector[1], direction_vector[0])
-			# _, speed = action
 
+			#comment out one of these based on above 
+			# _, speed = action
 			angle, speed= action
+
 			forward, direction = move_and_rotate(data.xpos[8], angle, forward)
-			direction = np.array([1.0,0.0])
-			# direction = np.array(direction[:2])
+
+			# direction = np.array([1.0,0.0])
+			direction = np.array(direction[:2])
 			direction /= np.linalg.norm(direction)  # normalize the velocity vector
 			data.qvel[:2] = 10 * speed * direction
 			reward, goal, foul=compute_reward()
@@ -274,9 +276,6 @@ def render_it():
 			#print(data.qvel)
 			agent_vx, agent_vy=data.qvel[:2]
 			ball_vx, ball_vy=data.qvel[7:9]
-			# next_state=np.array([agent_x, agent_y, agent_vx, agent_vy, forward, ball_x, ball_y, ball_vx, ball_vy])
-			
-			#just a test remove it
 			next_state=np.array([agent_x, agent_y, agent_vx, agent_vy, forward, ball_x, ball_y, ball_vx, ball_vy])
 			
 			agent.update_replay_buffer(state, action, reward, next_state, goal)
