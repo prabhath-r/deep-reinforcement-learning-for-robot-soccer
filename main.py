@@ -1,11 +1,18 @@
 import os
 import math
 import numpy as np
+import random
 import mujoco as mj
 from mujoco.glfw import glfw
 
 from env import Soccer
 from ddpg import DDPG
+
+from tensorboardX import SummaryWriter
+
+
+#data.xpos[8] -> ball position
+#data.xpos[9] -> agent position
 
 env = Soccer()
 
@@ -24,7 +31,8 @@ def Is_ball_touched():
 			#print("touched_ball")
 			return 100
 	return 0
-boundaries=( "Touch lines1", "Touch lines2", "Touch lines3", "Touch lines4", "Touch lines5", "Touch lines6",)
+
+boundaries=("Touch lines1", "Touch lines2", "Touch lines3", "Touch lines4", "Touch lines5", "Touch lines6")
 def Is_boundaries_touched():
 	for i in range(len(data.contact.geom1)):
 		if (data.geom(data.contact.geom1[i]).name == "sphero1" and data.geom(data.contact.geom2[i]).name in boundaries) or (data.geom(data.contact.geom2[i]).name == "sphero1" and data.geom(data.contact.geom1[i]).name in boundaries):
@@ -32,6 +40,7 @@ def Is_boundaries_touched():
 			#print(data.xpos[8])
 			return -10000
 	return 0
+
 Goal=("Goal lines1", "Goal lines2")
 def Is_goal():
 	for i in range(len(data.contact.geom1)):
@@ -39,6 +48,7 @@ def Is_goal():
 			#print("Goal!!!")
 			return 1000
 	return 0
+
 def Is_goal_sphero():
 	for i in range(len(data.contact.geom1)):
 		if (data.geom(data.contact.geom1[i]).name == "sphero1" and data.geom(data.contact.geom2[i]).name in Goal) or (data.geom(data.contact.geom2[i]).name == "sphero1" and data.geom(data.contact.geom1[i]).name in Goal):
@@ -50,11 +60,12 @@ def distance_bw_goal1_n_ball():
 		# define the line by two points a and b
 		a = np.array([45, 5, 0])
 		b = np.array([45, -5, 0])
-		# define the point p
-		p = data.xpos[8]
+		ball_pos = data.xpos[8]
 		# calculate the distance
-		distance = np.linalg.norm(np.cross(p - a, p - b)) / np.linalg.norm(b - a)
+		distance = np.linalg.norm(np.cross(ball_pos - a, ball_pos - b)) / np.linalg.norm(b - a)
+		# print(distance)
 		return distance
+
 def distance_bw_goal2_n_ball():
 		# define the line by two points a and b
 		a = np.array([-45, 5, 0])
@@ -64,12 +75,15 @@ def distance_bw_goal2_n_ball():
 		# calculate the distance
 		distance = np.linalg.norm(np.cross(p - a, p - b)) / np.linalg.norm(b - a)
 		return distance
-def distance_bw_ball_n_sphero():
-    return np.linalg.norm(data.xpos[8] - data.xpos[9])
+
+def distance_bw_agent_and_ball():
+	distance =  np.linalg.norm(data.xpos[8] - data.xpos[9])
+	# print(distance)
+	return distance
 
 def compute_reward():
     # Compute the distance to the ball and the goal
-    distance_to_ball = distance_bw_ball_n_sphero()
+    distance_to_ball = distance_bw_agent_and_ball()
     distance_to_goal = distance_bw_goal1_n_ball()
 
     # Compute the time penalty
@@ -98,11 +112,6 @@ def compute_reward():
             #rotation_penalty +
             out_of_bound_penalty)
     return reward, True if goal_achieved_reward!=0.0 else False, True if out_of_bound_penalty!=0 or Sphero_goal_penalty!=0 else False
-
-
-epsilon = 1.0
-epsilon_decay = 0.995
-epsilon_min = 0.01
 
 # Configurations
 xml_path = 'field.xml' #xml file (assumes this is in the same folder as this file)
@@ -133,12 +142,12 @@ def render_it():
 	mj.mj_forward(model, data)
 	# start_agent_x=random.uniform(-45, 45)
 	# start_agent_y=random.uniform(-30, 30)
-	# start_ball_x=random.uniform(-45, 45)
-	# start_ball_y=random.uniform(-30, 30)
+	start_ball_x=random.uniform(-45, 45)
+	start_ball_y=random.uniform(-30, 30)
 	start_agent_x=0
 	start_agent_y=0
-	start_ball_x=5
-	start_ball_y=0
+	# start_ball_x=5
+	# start_ball_y=0
 	data.qpos[:2]=[start_agent_x, start_agent_y]
 	data.qpos[7:9]=[start_ball_x, start_ball_y]
 	# Init GLFW, create window, make OpenGL context current, request v-sync
@@ -188,7 +197,6 @@ def render_it():
 		dy = ypos - lasty
 		lastx = xpos
 		lasty = ypos
-
 
 		# no buttons down: nothing to do
 		if (not button_left) and (not button_middle) and (not button_right):
@@ -242,17 +250,23 @@ def render_it():
 		while (data.time - time_prev < 1/60.0):
 			forward=state[4]
 			mj.mj_step(model, data)
-			#angle, speed = env.action_space.sample()
-			# Select an action using the agent's policy
+
+			# angle, speed = env.action_space.sample() # Take a random action everytime, doesn't work
+
+			# agent_pos = data.xpos[9]
+			# ball_pos = data.xpos[8]	
+			# direction_vector = ball_pos - agent_pos
+
 			action = agent.act(state)[0]
-			#print(action)
+			# angle = np.arctan2(direction_vector[1], direction_vector[0])
+			# _, speed = action
+
 			angle, speed= action
-			forward, direction=move_and_rotate(data.xpos[8], angle, forward)
-			# direction = np.array([1.0,0.0])
-			speed_factor = 8
-			direction = np.array(direction[:2])
+			forward, direction = move_and_rotate(data.xpos[8], angle, forward)
+			direction = np.array([1.0,0.0])
+			# direction = np.array(direction[:2])
 			direction /= np.linalg.norm(direction)  # normalize the velocity vector
-			data.qvel[:2] = speed_factor * speed * direction
+			data.qvel[:2] = 10 * speed * direction
 			reward, goal, foul=compute_reward()
 			a_pos, b_pos=data.xpos[8], data.xpos[9]
 			agent_x, agent_y, agent_z = a_pos
@@ -271,8 +285,12 @@ def render_it():
 			state=next_state
 			if goal or foul:
 				break
+			if Is_boundaries_touched() != 0:
+				break
 		
 		if goal or foul:
+			break
+		if Is_boundaries_touched() != 0:
 			break
 
 		# End simulation based on time
@@ -300,6 +318,9 @@ def render_it():
 	glfw.terminate()
 	return sum(score), score
 
+epsilon = 1.0
+epsilon_decay = 0.995
+epsilon_min = 0.01
 
 state_size = env.observation_space.shape[0]
 action_size = env.action_space.shape[0]
