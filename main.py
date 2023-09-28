@@ -11,8 +11,8 @@ from ddpg import DDPG
 from tensorboardX import SummaryWriter
 
 
-#data.xpos[8] -> ball position
-#data.xpos[9] -> agent position
+#data.xpos[8] -> agent position
+#data.xpos[9] -> ball position
 
 env = Soccer()
 
@@ -46,45 +46,45 @@ def Is_goal():
 	for i in range(len(data.contact.geom1)):
 		if (data.geom(data.contact.geom1[i]).name == "ball_g" and data.geom(data.contact.geom2[i]).name in Goal) or (data.geom(data.contact.geom2[i]).name == "ball_g" and data.geom(data.contact.geom1[i]).name in Goal):
 			#print("Goal!!!")
-			return 1000
+			return 10000
 	return 0
 
 def Is_goal_self():
 	for i in range(len(data.contact.geom1)):
 		if (data.geom(data.contact.geom1[i]).name == "sphero1" and data.geom(data.contact.geom2[i]).name in Goal) or (data.geom(data.contact.geom2[i]).name == "sphero1" and data.geom(data.contact.geom1[i]).name in Goal):
 			#print("Sphero Goal!!!")
-			return -100
+			return -10000
 	return 0
 
-def distance_bw_goal1_n_ball():
+def distance_bw_goal_n_ball():
 		# define the line by two points a and b
 		a = np.array([45, 5, 0])
 		b = np.array([45, -5, 0])
-		ball_pos = data.xpos[8]
+		ball_pos = data.xpos[9]
 		# calculate the distance
 		distance = np.linalg.norm(np.cross(ball_pos - a, ball_pos - b)) / np.linalg.norm(b - a)
 		# print(distance)
 		return distance
 
-def distance_bw_goal2_n_ball():
-		# define the line by two points a and b
-		a = np.array([-45, 5, 0])
-		b = np.array([-45, -5, 0])
-		# define the point p
-		p = data.xpos[8]
+def distance_bw_goal_n_agent():
+		a = np.array([45, 5, 0])
+		b = np.array([45, -5, 0])
+		agent_pos = data.xpos[8]
 		# calculate the distance
-		distance = np.linalg.norm(np.cross(p - a, p - b)) / np.linalg.norm(b - a)
-		return distance
+		distance = np.linalg.norm(np.cross(agent_pos - a, agent_pos - b)) / np.linalg.norm(b - a)
 
 def distance_bw_agent_and_ball():
-	distance =  np.linalg.norm(data.xpos[8] - data.xpos[9])
+	agent_pos = data.xpos[8]
+	ball_pos = data.xpos[9]
+	distance =  np.linalg.norm(agent_pos - ball_pos)
 	# print(distance)
 	return distance
 
 def compute_reward():
     # Compute the distance to the ball and the goal
     distance_to_ball = distance_bw_agent_and_ball()
-    distance_to_goal = distance_bw_goal1_n_ball()
+    distance_ball_to_goal = distance_bw_goal_n_ball()
+    distance_agent_to_goal = distance_bw_agent_and_ball()
 
     # Compute the time penalty
     time_penalty = -0.0001
@@ -106,7 +106,7 @@ def compute_reward():
             touch_ball_reward +
             goal_achieved_reward +
             distance_to_ball_coeff * distance_to_ball +
-            distance_to_goal_coeff * distance_to_goal +
+            # distance_to_goal_coeff * distance_to_goal +
             time_penalty +
 	        self_goal_penalty+
             out_of_bound_penalty)
@@ -114,7 +114,7 @@ def compute_reward():
 
 # Configurations
 xml_path = 'field.xml' #xml file (assumes this is in the same folder as this file)
-simend = 40 #simulation time
+simend = 20 #simulation time
 print_camera_config = 0 #set to 1 to print camera config
 						#this is useful for initializing view of the model)
 
@@ -155,7 +155,12 @@ def render_it():
 	glfw.make_context_current(window)
 	glfw.swap_interval(1)
 
-	state=np.array([start_agent_x, start_agent_y, 0, 0, 0, start_ball_x, start_ball_y, 0, 0])
+	# state=np.array([start_agent_x, start_agent_y, 0, 0, 0, start_ball_x, start_ball_y, 0, 0])
+
+	goal_x = 45
+	goal_y_top = 5
+	goal_y_bottom = -5
+	state=np.array([start_agent_x, start_agent_y, 0, 0, 0, start_ball_x, start_ball_y, 0, 0, goal_x, goal_y_top, goal_x, goal_y_bottom])
 
 	# initialize visualization data structures
 	mj.mjv_defaultCamera(cam)
@@ -252,18 +257,21 @@ def render_it():
 
 			# angle, speed = env.action_space.sample() # Take a random action everytime(test)
 
-			# agent_pos = data.xpos[9]
-			# ball_pos = data.xpos[8]	
-			# direction_vector = ball_pos - agent_pos
+			# agent_pos = data.xpos[8]
+			# ball_pos = data.xpos[9]	
 
+			# direction_vector = ball_pos - agent_pos
+			# print(ball_pos, "Ball position")
+			# print(state, "state")
 			action = agent.act(state)[0]
+
 			# angle = np.arctan2(direction_vector[1], direction_vector[0])
 
 			#comment out one of these based on above 
 			# _, speed = action
 			angle, speed= action
 
-			forward, direction = move_and_rotate(data.xpos[8], angle, forward)
+			forward, direction = move_and_rotate(data.xpos[9], angle, forward)
 
 			# direction = np.array([1.0,0.0])
 			direction = np.array(direction[:2])
@@ -276,25 +284,33 @@ def render_it():
 			#print(data.qvel)
 			agent_vx, agent_vy=data.qvel[:2]
 			ball_vx, ball_vy=data.qvel[7:9]
-			next_state=np.array([agent_x, agent_y, agent_vx, agent_vy, forward, ball_x, ball_y, ball_vx, ball_vy])
+
+			# next_state=np.array([agent_x, agent_y, agent_vx, agent_vy, forward, ball_x, ball_y, ball_vx, ball_vy])
+			next_state=np.array([agent_x, agent_y, agent_vx, agent_vy, forward, ball_x, ball_y, ball_vx, ball_vy, goal_x, goal_y_top, goal_x, goal_y_bottom])
+
 			
 			agent.update_replay_buffer(state, action, reward, next_state, goal)
 			agent.train()
 			score.append(reward)
 			state=next_state
+
 			if goal or foul:
 				break
 			if Is_boundaries_touched() != 0:
 				break
-		
+			# if Is_goal_self()!=0 or Is_goal !=0:
+				# break
+			if reward<-10000:break
+
 		if goal or foul:
 			break
+		# if Is_goal_self()!=0 or Is_goal !=0:
+		# 	break
 		if Is_boundaries_touched() != 0:
 			break
-
-		# End simulation based on time
+		if reward<-10000:break
 		if (data.time>=simend):
-			break
+			break   # End simulation based on time
 
 		# get framebuffer viewport
 		viewport_width, viewport_height = glfw.get_framebuffer_size(window)
@@ -322,6 +338,7 @@ epsilon_decay = 0.995
 epsilon_min = 0.01
 
 state_size = env.observation_space.shape[0]
+print(state_size)
 action_size = env.action_space.shape[0]
 hidden_size = 256
 agent = DDPG(state_size, action_size, hidden_size)

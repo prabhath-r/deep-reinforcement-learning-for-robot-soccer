@@ -12,8 +12,14 @@ from hyperparams import LR_ACTOR, LR_CRITIC, WEIGHT_DECAY, BATCH_SIZE, GAMMA, TA
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+        # current state_size -> 11
+        # current action_size -> 2
+
 class DDPG:
     def __init__(self, state_size, action_size, hidden_size):
+
+        self.actor_loss_value = 0
+        self.critic_loss_value = 0
         self.actor = Actor(state_size, action_size, hidden_size).to(device)
         self.target_actor = copy.deepcopy(self.actor).to(device)
         self.critic = Critic(state_size, action_size, hidden_size).to(device)
@@ -92,4 +98,4 @@ class DDPG:
         self.actor.load_state_dict(torch.load(filename + "_actor.pth", map_location=device))
         self.target_actor = copy.deepcopy(self.actor)
         self.critic.load_state_dict(torch.load(filename + "_critic.pth", map_location=device))
-        self.target_critic = copy.dee
+        self.target_critic = copy.deepcopy(self.critic)

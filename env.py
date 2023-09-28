@@ -25,6 +25,8 @@ class Soccer(gym.Env):
         # 7. Ball y-coordinate
         # 8. Ball x-velocity
         # 9. Ball y-velocity
-        low = np.array([0, 0, -10, -10, -np.pi, -45, -30, -10, -10], dtype=np.float32)
-        high = np.array([0, 0, 10, 10, np.pi, 45, 30, 10, 10], dtype=np.float32)
+        # 10. Goal x-coordinate
+        # 11. Goal y-coordinate
+        low = np.array([0, 0, -10, -10, -np.pi, -45, -30, -10, -10, 45, -5], dtype=np.float32)
+        high = np.array([0, 0, 10, 10, np.pi, 45, 30, 10, 10, 45, 5], dtype=np.float32)
         self.observation_space = spaces.Box(low=low, high=high, dtype=np.float32)

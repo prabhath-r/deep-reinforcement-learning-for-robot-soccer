@@ -1,105 +1,105 @@
-    <mujoco>
-    <asset>
-            <material name="floor" texture="checks1" texrepeat="2 2" texuniform="true"/>
-            <texture name="checks1" builtin="checker" type='2d' width='256' height='256' rgb1="1 1 1" rgb2="0 0 0" />
-            <material name="object" texture="checks2" texrepeat="2 2" texuniform="true"/>
-            <texture name="checks2" builtin="checker" type='2d' width='256' height='256' rgb1="1 0 0" rgb2="0 1 0" />
-        </asset>
-        <default>
-        <geom condim="3" friction="1 0.5 0.5"/>
-    </default>
+<mujoco>
+<asset>
+        <material name="floor" texture="checks1" texrepeat="2 2" texuniform="true"/>
+        <texture name="checks1" builtin="checker" type='2d' width='256' height='256' rgb1="1 1 1" rgb2="0 0 0" />
+        <material name="object" texture="checks2" texrepeat="2 2" texuniform="true"/>
+        <texture name="checks2" builtin="checker" type='2d' width='256' height='256' rgb1="1 0 0" rgb2="0 1 0" />
+    </asset>
+    <default>
+    <geom condim="3" friction="1 0.5 0.5"/>
+</default>
 
 
-        <worldbody>
-            <!--Stadium-->
-            <geom name="stadium" type="plane" size="52 37 0.1" pos="0 0 0" rgba="0 1 0 1" />
-                
-            <!--Boundaries-->
-            <body name="boundaries">
-                <geom name="boundary_1" type="box" size="48 0.1 1" pos="0 33 0" rgba="0 0 0 1" />
-                <geom name="boundary_2" type="box" size="48 0.1 1" pos="0 -33 0" rgba="0 0 0 1" />
-                <geom name="boundary_3" type="box" size="33 0.1 1" pos="48 0 0" rgba="0 0 0 1" euler="0 0 90" />
-                <geom name="boundary_4" type="box" size="33 0.1 1" pos="-48 0 0" rgba="0 0 0 1" euler="0 0 90" />
-            </body>
+    <worldbody>
+        <!--Stadium-->
+        <geom name="stadium" type="plane" size="52 37 0.1" pos="0 0 0" rgba="0 1 0 1" />
+            
+        <!--Boundaries-->
+        <body name="boundaries">
+            <geom name="boundary_1" type="box" size="48 0.1 1" pos="0 33 0" rgba="1 1 1 1" />
+            <geom name="boundary_2" type="box" size="48 0.1 1" pos="0 -33 0" rgba="1 1 1 1" />
+            <geom name="boundary_3" type="box" size="33 0.1 1" pos="48 0 0" rgba="1 1 1 1" euler="0 0 90" />
+            <geom name="boundary_4" type="box" size="33 0.1 1" pos="-48 0 0" rgba="1 1 1 1" euler="0 0 90" />
+        </body>
 
-            <!--Goal posts-->
-            <!--Goal post 1-->
-            <body name="Goal_post_1">
-                <geom type="box" size="5 0.2 1.6" pos="46.8 0 0" rgba="1 0 0 1" euler="0 0 90" />
-                <geom type="box" size="0.9 0.2 1.6" pos="45.9 5 0" rgba="1 0 0 1" />
-                <geom type="box" size="0.9 0.2 1.6" pos="45.9 -5 0" rgba="1 0 0 1" />
-                <site name="gp_11" type="box" size="5 0.2 1.6" pos="46.6 0 0" rgba="1 1 0 1" euler="0 0 90"/>
-                <site name="gp_12" type="box" size="0.9 0.2 1.6" pos="45.9 4.9 0" rgba="1 1 0 1" />
-                <site name="gp_13" type="box" size="0.9 0.2 1.6" pos="45.9 -4.9 0" rgba="1 1 0 1" />
-        
-            </body>
+        <!--Goal posts-->
+        <!--Goal post 1-->
+        <body name="Goal_post_1">
+            <geom type="box" size="5 0.2 1.6" pos="46.8 0 0" rgba="1 0 0 1" euler="0 0 90" />
+            <geom type="box" size="0.9 0.2 1.6" pos="45.9 5 0" rgba="1 0 0 1" />
+            <geom type="box" size="0.9 0.2 1.6" pos="45.9 -5 0" rgba="1 0 0 1" />
+            <site name="gp_11" type="box" size="5 0.2 1.6" pos="46.6 0 0" rgba="1 1 0 1" euler="0 0 90"/>
+            <site name="gp_12" type="box" size="0.9 0.2 1.6" pos="45.9 4.9 0" rgba="1 1 0 1" />
+            <site name="gp_13" type="box" size="0.9 0.2 1.6" pos="45.9 -4.9 0" rgba="1 1 0 1" />
+    
+        </body>
 
-            <!--Goal post 2-->
-            <body name="Goal_post_2">
-                <geom type="box" size="5 0.2 1.6" pos="-46.8 0 0" rgba="1 0 0 1" euler="0 0 90" />
-                <geom type="box" size="0.9 0.2 1.6" pos="-45.9 5 0" rgba="1 0 0 1" />
-                <geom type="box" size="0.9 0.2 1.6" pos="-45.9 -5 0" rgba="1 0 0 1" />
-                <site name="gp_21" type="box" size="5 0.2 1.6" pos="-46.6 0 0" rgba="1 1 0 1" euler="0 0 90"/>
-                <site name="gp_22" type="box" size="0.9 0.2 1.6" pos="-45.9 4.9 0" rgba="1 1 0 1" />
-                <site name="gp_23" type="box" size="0.9 0.2 1.6" pos="-45.9 -4.9 0" rgba="1 1 0 1" />
-            </body>
+        <!--Goal post 2-->
+        <body name="Goal_post_2">
+            <geom type="box" size="5 0.2 1.6" pos="-46.8 0 0" rgba="1 0 0 1" euler="0 0 90" />
+            <geom type="box" size="0.9 0.2 1.6" pos="-45.9 5 0" rgba="1 0 0 1" />
+            <geom type="box" size="0.9 0.2 1.6" pos="-45.9 -5 0" rgba="1 0 0 1" />
+            <site name="gp_21" type="box" size="5 0.2 1.6" pos="-46.6 0 0" rgba="1 1 0 1" euler="0 0 90"/>
+            <site name="gp_22" type="box" size="0.9 0.2 1.6" pos="-45.9 4.9 0" rgba="1 1 0 1" />
+            <site name="gp_23" type="box" size="0.9 0.2 1.6" pos="-45.9 -4.9 0" rgba="1 1 0 1" />
+        </body>
 
-            <!-- Field Markings -->
-            <!-- Field Lines -->
-            <body>
-                <!-- Touch lines -->
-                <geom name="Touch lines1" type="box" size="0.001 45 0.01" pos="0 30 0" rgba="1 1 1 1" euler="90 0 90"/>
-                <geom name="Touch lines2" type="box" size="0.001 45 0.01" pos="0 -30 0" rgba="1 1 1 1" euler="90 0 90"/>
-                <geom name="Touch lines3" type="box" size="0.001 13 0.01" pos="-45 -18 0" rgba="1 1 1 1" euler="0 90 0"/>
-                <geom name="Touch lines4" type="box" size="0.001 13 0.01" pos="-45 18 0" rgba="1 1 1 1" euler="0 90 0"/>
-                <geom name="Touch lines5" type="box" size="0.001 13 0.01" pos="45 -18 0" rgba="1 1 1 1" euler="0 90 0"/>
-                <geom name="Touch lines6" type="box" size="0.001 13 0.01" pos="45 18 0" rgba="1 1 1 1" euler="0 90 0"/>
-                <!-- Goal lines -->
-                <geom name="Goal lines1" type="box" size="0.001 5 0.01" pos="45 0 0" rgba="1 1 0 1" euler="0 90 0"/>
-                <geom name="Goal lines2" type="box" size="0.001 5 0.01" pos="-45 0 0" rgba="1 1 0 1" euler="0 90 0"/>
-            </body>
+        <!-- Field Markings -->
+        <!-- Field Lines -->
+        <body>
+            <!-- Touch lines -->
+            <geom name="Touch lines1" type="box" size="0.001 45 0.01" pos="0 30 0" rgba="1 1 1 1" euler="90 0 90"/>
+            <geom name="Touch lines2" type="box" size="0.001 45 0.01" pos="0 -30 0" rgba="1 1 1 1" euler="90 0 90"/>
+            <geom name="Touch lines3" type="box" size="0.001 13 0.01" pos="-45 -18 0" rgba="1 1 1 1" euler="0 90 0"/>
+            <geom name="Touch lines4" type="box" size="0.001 13 0.01" pos="-45 18 0" rgba="1 1 1 1" euler="0 90 0"/>
+            <geom name="Touch lines5" type="box" size="0.001 13 0.01" pos="45 -18 0" rgba="1 1 1 1" euler="0 90 0"/>
+            <geom name="Touch lines6" type="box" size="0.001 13 0.01" pos="45 18 0" rgba="1 1 1 1" euler="0 90 0"/>
+            <!-- Goal lines -->
+            <geom name="Goal lines1" type="box" size="0.001 5 0.01" pos="45 0 0" rgba="1 1 0 1" euler="0 90 0"/>
+            <geom name="Goal lines2" type="box" size="0.001 5 0.01" pos="-45 0 0" rgba="1 1 0 1" euler="0 90 0"/>
+        </body>
 
-            <!-- Halfway Lines -->
-            <body>
-                <!-- Halfway Line -->
-                <geom name="Halfway Lines 1" type="box" size="0.001 30 0.01" pos="0 0 0" rgba="1 1 1 1" euler="0 90 0"/>
+        <!-- Halfway Lines -->
+        <body>
+            <!-- Halfway Line -->
+            <geom name="Halfway Lines 1" type="box" size="0.001 30 0.01" pos="0 0 0" rgba="1 1 1 1" euler="0 90 0"/>
 
-                <!-- Goal-to-Goal Line -->
-                <geom name="Goal-to-Goal" type="box" size="0.001 45 0.01" pos="0 0 0" rgba="1 1 1 1" euler="90 0 90"/>
-            </body>
+            <!-- Goal-to-Goal Line -->
+            <geom name="Goal-to-Goal" type="box" size="0.001 45 0.01" pos="0 0 0" rgba="1 1 1 1" euler="90 0 90"/>
+        </body>
 
-            <!-- Defence area -->
-            <body>
-                <geom name="Defence area1" type="box" size="0.001 5 0.01" pos="40 10 0" rgba="1 1 1 1" euler="90 0 90"/>
-                <geom name="Defence area2" type="box" size="0.001 5 0.01" pos="40 -10 0" rgba="1 1 1 1" euler="90 0 90"/>
-                <geom name="Defence area3" type="box" size="0.001 10 0.01" pos="35 0 0" rgba="1 1 1 1" euler="0 90 0"/>
-            </body>
-            <body>
-                <geom name="Defence area4" type="box" size="0.001 5 0.01" pos="-40 10 0" rgba="1 1 1 1" euler="90 0 90"/>
-                <geom name="Defence area5" type="box" size="0.001 5 0.01" pos="-40 -10 0" rgba="1 1 1 1" euler="90 0 90"/>
-                <geom name="Defence area6" type="box" size="0.001 10 0.01" pos="-35 0 0" rgba="1 1 1 1" euler="0 90 0"/>
-            </body>
+        <!-- Defence area -->
+        <body>
+            <geom name="Defence area1" type="box" size="0.001 5 0.01" pos="40 10 0" rgba="1 1 1 1" euler="90 0 90"/>
+            <geom name="Defence area2" type="box" size="0.001 5 0.01" pos="40 -10 0" rgba="1 1 1 1" euler="90 0 90"/>
+            <geom name="Defence area3" type="box" size="0.001 10 0.01" pos="35 0 0" rgba="1 1 1 1" euler="0 90 0"/>
+        </body>
+        <body>
+            <geom name="Defence area4" type="box" size="0.001 5 0.01" pos="-40 10 0" rgba="1 1 1 1" euler="90 0 90"/>
+            <geom name="Defence area5" type="box" size="0.001 5 0.01" pos="-40 -10 0" rgba="1 1 1 1" euler="90 0 90"/>
+            <geom name="Defence area6" type="box" size="0.001 10 0.01" pos="-35 0 0" rgba="1 1 1 1" euler="0 90 0"/>
+        </body>
 
-            <!-- Team A -->
-            <!-- Player 1 -->
-            <body name="agent" pos="-3 0 0.365">
-                <geom name="sphero1" type="sphere" size="0.215"  rgba="1 0.647 0 1" mass="1" friction="1" />
-                <joint type="free"/>
-            </body>
+        <!-- Team A -->
+        <!-- Player 1 -->
+        <body name="agent" pos="-3 0 0.365">
+            <geom name="sphero1" type="sphere" size="0.215"  rgba="1 0.647 0 1" mass="1" friction="1" />
+            <joint type="free"/>
+        </body>
 
-            <!-- Ball -->
-            <body name="ball" pos="0 0 0.365" >
-                <geom name="ball_g" type="sphere" size="0.365"  rgba="0 0 1 1"  mass="1" material="object" friction="1" />
-                <!-- <joint name="kick_1" type="slide" axis="1 0 0" />
-                <joint name="roll_1" type="hinge" axis="0 0 -1" /> -->
-                <joint type="free"/>
-                <!--
-                <joint name="roll" type="slide" axis="1 1 0"/>
-                <joint type="slide" axis="0 0 1"/>
-                <joint type="hinge" axis="0 -1 0"/>
-                <joint name="rotate" type="hinge" axis="0 0 1"/>-->
-            </body>
+        <!-- Ball -->
+        <body name="ball" pos="0 0 0.365" >
+            <geom name="ball_g" type="sphere" size="0.365"  rgba="0 0 1 1"  mass="1" material="object" friction="1" />
+            <!-- <joint name="kick_1" type="slide" axis="1 0 0" />
+            <joint name="roll_1" type="hinge" axis="0 0 -1" /> -->
+            <joint type="free"/>
+            <!--
+            <joint name="roll" type="slide" axis="1 1 0"/>
+            <joint type="slide" axis="0 0 1"/>
+            <joint type="hinge" axis="0 -1 0"/>
+            <joint name="rotate" type="hinge" axis="0 0 1"/>-->
+        </body>
 
-        </worldbody>
-        
-    </mujoco>
+    </worldbody>
+    
+</mujoco>
