@@ -40,6 +40,7 @@ class DDPG:
         
 
     def act(self, state, epsilon=0):
+        # print(state.shape)
         state = torch.from_numpy(state).float().unsqueeze(0).to(device)
         self.actor.eval()
         with torch.no_grad():
