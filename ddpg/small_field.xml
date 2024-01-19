@@ -1,0 +1,65 @@
+<mujoco>
+    <asset>
+        <material name="floor" texture="checks1" texrepeat="2 2" texuniform="true"/>
+        <texture name="checks1" builtin="checker" type='2d' width='256' height='256' rgb1="1 1 1" rgb2="0 0 0" />
+        <material name="object" texture="checks1" specular="1" shininess="0.7" reflectance="0.5" rgba="0.8 0.8 0.8 1" />
+    </asset>
+    <default>
+        <geom condim="3" friction="1.5 0.5 0.5"/>
+    </default>
+
+    <option solver="PGS" iterations="50" tolerance="1e-10"/>
+
+    <worldbody>
+        <!-- Stadium -->
+        <geom name="stadium" type="plane" size="10 5 0.1" pos="0 0 0" rgba="0 1 0 1" />
+
+        <!-- Boundaries -->
+        <geom name="boundary_1" type="box" size="10 0.1 1" pos="0 5 0" rgba="1 1 1 1" />
+        <geom name="boundary_2" type="box" size="10 0.1 1" pos="0 -5 0" rgba="1 1 1 1" />
+        <geom name="boundary_3" type="box" size="5 0.1 1" pos="10 0 0" rgba="1 1 1 1" euler="0 0 90" />
+        <geom name="boundary_4" type="box" size="5 0.1 1" pos="-10 0 0" rgba="1 1 1 1" euler="0 0 90" />
+
+        <!-- Goal posts -->
+        <!-- Goal post 1 -->
+        <body name="Goal_post_1">
+            <geom type="box" size="1.5 0.2 1.0" pos="9.5 0 0.5" rgba="1 0 0 1" euler="0 0 90" />
+            <geom type="box" size="0.3 0.2 1.0" pos="9.2 1.5 0.5" rgba="1 0 0 1" />
+            <geom type="box" size="0.3 0.2 1.0" pos="9.2 -1.5 0.5" rgba="1 0 0 1" />
+        </body>
+
+        <!-- Goal post 2 -->
+        <body name="Goal_post_2">
+            <geom type="box" size="1.5 0.2 1.0" pos="-9.5 0 0.5" rgba="1 0 0 1" euler="0 0 90" />
+            <geom type="box" size="0.3 0.2 1.0" pos="-9.2 1.5 0.5" rgba="1 0 0 1" />
+            <geom type="box" size="0.3 0.2 1.0" pos="-9.2 -1.5 0.5" rgba="1 0 0 1" />
+        </body>
+
+        <!-- Field Markings -->
+        <!-- Boundary lines -->
+        <geom name="Touch_lines1" type="box" size="0.001 10 0.01" pos="0 4.7 0" rgba="1 1 1 1" euler="90 0 90"/>
+        <geom name="Touch_lines2" type="box" size="0.001 10 0.01" pos="0 -4.7 0" rgba="1 1 1 1" euler="90 0 90"/>
+        <geom name="Touch_lines3" type="box" size="0.001 5 0.01" pos="-9.5 0 0" rgba="1 1 1 1" euler="0 90 0"/>
+        <geom name="Touch_lines4" type="box" size="0.001 5 0.01" pos="9.5 0 0" rgba="1 1 1 1" euler="0 90 0"/>
+
+        <!-- Goal lines -->
+        <geom name="Goal_lines1" type="box" size="0.001 1.7 0.01" pos="9 0 0" rgba="1 1 1 1" euler="0 90 0"/>
+        <geom name="Goal_lines2" type="box" size="0.001 1.7 0.01" pos="-9 0 0" rgba="1 1 1 1" euler="0 90 0"/>
+
+        <!-- Halfway Line -->
+        <geom name="Halfway Line" type="box" size="0.001 5 0.01" pos="0 0 0" rgba="1 1 1 1" euler="0 90 0"/>
+
+        <!-- Agent (larger sphero) -->
+        <!-- Agent (larger sphero) -->
+        <body name="agent" pos="-2 0 0.3">
+            <geom name="sphero_agent" type="sphere" size="0.2" rgba="1 0.647 0 1" mass="5" friction="1" />
+            <joint type="free"/>
+        </body>
+
+        <!-- Ball (smaller sphero) -->
+        <body name="ball" pos="2 0 0.2">
+            <geom name="sphero_ball" type="sphere" size="0.3" rgba="1 1 1 1" mass="1" material="object" friction="0.8" />
+            <joint type="free"/>
+        </body>
+    </worldbody>
+</mujoco>

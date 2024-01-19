@@ -1,0 +1,9 @@
+ultralytics
+torch==2.1.0
+torchaudio==2.1.0
+torchvision==0.16.0
+ultralytics==8.0.195
+uvicorn==0.21.1
+fastapi==0.95.0
+opencv-python==4.8.1.78
+numpy
